@@ -4,8 +4,7 @@ on:
     branches: [ "main" ]
 
 env:
-  DOCKER_USER: ${{secrets.DOCKER_USER}}
-  DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+  DOCKER_USER: swchck
   REPO_NAME: transcriber
 jobs:
   build:
