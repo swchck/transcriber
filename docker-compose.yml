@@ -1,0 +1,43 @@
+version: "3.4"
+
+networks:
+  internal:
+  bridge:
+    driver: bridge
+
+volumes:
+  cache-pip:
+  cache-poetry:
+  cache-whisper:
+  cache-faster-whisper:
+
+services:
+  # Web UI
+  webui:
+    build:
+      context: webui
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    networks:
+      - internal
+    depends_on:
+      - whisper
+
+  # Backend API
+  whisper:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ASR_MODEL=tiny
+    ports:
+      - 9000:9000
+    networks:
+      - bridge
+    volumes:
+      - ./app:/app/app
+      - cache-pip:/root/.cache/pip
+      - cache-poetry:/root/.cache/poetry
+      - cache-whisper:/root/.cache/whisper
+      - cache-faster-whisper:/root/.cache/faster_whisper
