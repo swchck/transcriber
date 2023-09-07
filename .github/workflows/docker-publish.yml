@@ -14,9 +14,6 @@ jobs:
         include:
           - docker_file: whisper/Dockerfile
             platforms: linux/arm64,linux/amd64
-          - docker_file: whisper/Dockerfile.gpu
-            tag_extension: -gpu
-            platforms: linux/amd64
           - docker_file: webui/Dockerfile
             platforms: linux/amd64
     steps:
