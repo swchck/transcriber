@@ -1,4 +1,4 @@
-version: "3.4"
+version: "3.8"
 
 networks:
   internal:
@@ -27,7 +27,7 @@ services:
   # Backend API
   whisper:
     build:
-      context: .
+      context: whisper
       dockerfile: Dockerfile
     environment:
       - ASR_MODEL=tiny
@@ -36,7 +36,6 @@ services:
     networks:
       - bridge
     volumes:
-      - ./app:/app/app
       - cache-pip:/root/.cache/pip
       - cache-poetry:/root/.cache/poetry
       - cache-whisper:/root/.cache/whisper
