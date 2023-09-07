@@ -17,7 +17,6 @@ services:
     ports:
       - 9000:9000
     volumes:
-      - ./app:/app/app
       - cache-pip:/root/.cache/pip
       - cache-poetry:/root/.cache/poetry
       - cache-whisper:/root/.cache/whisper

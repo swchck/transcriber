@@ -53,23 +53,6 @@ app.add_middleware(
     allow_headers=["*"],  # Allowed HTTP headers
 )
 
-assets_path = os.getcwd() + "/swagger-ui-assets"
-if path.exists(assets_path + "/swagger-ui.css") and path.exists(assets_path + "/swagger-ui-bundle.js"):
-    app.mount("/assets", StaticFiles(directory=assets_path), name="static")
-    def swagger_monkey_patch(*args, **kwargs):
-        return get_swagger_ui_html(
-            *args,
-            **kwargs,
-            swagger_favicon_url="",
-            swagger_css_url="/assets/swagger-ui.css",
-            swagger_js_url="/assets/swagger-ui-bundle.js",
-        )
-    applications.get_swagger_ui_html = swagger_monkey_patch
-
-@app.get("/", response_class=RedirectResponse, include_in_schema=False)
-async def index():
-    return "/docs"
-
 @app.post("/asr", tags=["Endpoints"])
 def asr(
     task : Union[str, None] = Query(default="transcribe", enum=["transcribe", "translate"]),
