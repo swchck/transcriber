@@ -3,8 +3,6 @@ on:
   push:
     tags:        
       - '*'
-    branches:
-      - debug
 
 env:
   DOCKER_USER: ${{secrets.DOCKER_USER}}
