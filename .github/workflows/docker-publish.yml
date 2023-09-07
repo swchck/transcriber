@@ -12,10 +12,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - docker_file: whisper/Dockerfile
-            platforms: linux/arm64,linux/amd64
-          - docker_file: webui/Dockerfile
-            platforms: linux/amd64
+          - context: whisper
+            app_name: whisper
+          - context: webui
+            app_name: transcriber-web
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -28,14 +28,10 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: Build and Publish the Docker debug image
-      if: github.ref == 'refs/heads/debug'
-      run: |
-        DOCKER_IMAGE_DEBUG=$DOCKER_USER/$REPO_NAME:debug${{ matrix.tag_extension }}
-        docker buildx build . --no-cache --platform=${{ matrix.platforms }} -t "${DOCKER_IMAGE_DEBUG}" -f ${{ matrix.docker_file }} --push
-    - name: Build and Publish the Docker image
-      if: github.ref != 'refs/heads/debug'
-      run: |
-        DOCKER_IMAGE_LATEST=$DOCKER_USER/$REPO_NAME:latest${{ matrix.tag_extension }}
-        DOCKER_IMAGE_VERSION=$DOCKER_USER/$REPO_NAME:$GITHUB_REF_NAME${{ matrix.tag_extension }}
-        docker buildx build . --no-cache --platform=${{ matrix.platforms }} -t "${DOCKER_IMAGE_LATEST}" -t "${DOCKER_IMAGE_VERSION}" -f ${{ matrix.docker_file }} --push
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v4.1.1
+      with:
+          context: ${{ matrix.context }}
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/transcriber/${{ matrix.app_name }}:latest
+          no-cache: true
